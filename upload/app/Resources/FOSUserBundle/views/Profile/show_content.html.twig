@@ -1,6 +1,8 @@
+{% extends "::base.html.twig" %}
+{% block body %}
 {% trans_default_domain 'FOSUserBundle' %}
 <div class="container">
-    <div class="row">
+    <div class="row" style="margin-top:40px;">
     	<div id="entete" class="span12">
         	<h2>Mes informations <i class="icon-user"></i></h2>
         	<div class="span3">
@@ -40,3 +42,12 @@
 		</div>
     </div>
 </div>
+<script src="{{ asset('js/jquery-2.1.4/jquery-2.1.4.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.js') }}"></script>
+<script>
+	$(document).ready(function() {
+		$('#recherche').css({height:'30px', width:'163px'});
+		$('#boutonRecherche').css('height','30px');
+	});
+</script>
+{% endblock %}

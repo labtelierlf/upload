@@ -1,0 +1,23 @@
+{% extends '::base.html.twig' %}
+{% block body %}
+	<div class="container" style="margin-top:40px;">
+		<div class="row">
+			<div id="entete" class="span12">
+				<h2>Modifier les informations <i class="icon-edit"></i></h2>
+				<div class="liens paddingRight bords" style="display:inline-block; padding-bottom:20px;">
+					<a href="{{ path('images_show', { 'id': entity.id }) }}"  title="voir">
+						<img src = "{{ ('uploads/'~entity.adresse)|imagine_filter('miniature') }}"/>
+					</a>
+					<form action="{{ path('images_update', {'id' : entity.id}) }}" method="post">
+						{{ form(edit_form) }}
+					</form>
+        			<a href="{{ path('images') }}">Retour liste</a>
+        			<br/>
+					<a href="{{ path('images_new') }}" style="margin-top:0px;">Nouvelle entrée</a>
+					<br/><br/>
+					{{ form(delete_form) }}</li>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

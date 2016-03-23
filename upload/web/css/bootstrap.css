@@ -141,7 +141,6 @@ input[type="submit"] {
   -webkit-appearance: button;
 }
 
-label,
 select,
 button,
 input[type="button"],
@@ -1070,7 +1069,7 @@ textarea {
 
 label {
   display: block;
-  margin-bottom: 5px;
+  //margin-bottom: 5px;
 }
 
 select,

@@ -1,0 +1,100 @@
+<style>
+	li a:hover {
+		cursor:pointer;
+	}
+</style>
+{% if pageCount > 1 %}
+<div class="pagination">
+    <ul>
+
+    {% if previous is defined %}
+        <li>
+            <a id="previous" class="page" data-info="{{ previous }}">&laquo;&nbsp;{{ 'Previous'|trans }}</a>
+        </li>
+    {% else %}
+        <li class="disabled">
+            <span>&laquo;&nbsp;{{ 'Previous'|trans }}</span>
+        </li>
+    {% endif %}
+
+    {% if startPage > 1 %}
+        <li>
+            <a id="1" class="page" data-info="1">1</a>
+        </li>
+        {% if startPage == 3 %}
+            <li>
+                <a id="2" class="page" data-info="2">2</a>
+            </li>
+        {% elseif startPage != 2 %}
+        <li class="disabled">
+            <span>&hellip;</span>
+        </li>
+        {% endif %}
+    {% endif %}
+
+    {% for page in pagesInRange %}
+        {% if page != current %}
+            <li>
+                <a id="page{{ page }}" class="page" data-info="{{ page }}">{{ page }}</a>
+            </li>
+        {% else %}
+            <li class="active">
+                <span>{{ page }}</span>
+            </li>
+        {% endif %}
+
+    {% endfor %}
+
+    {% if pageCount > endPage %}
+        {% if pageCount > (endPage + 1) %}
+            {% if pageCount > (endPage + 2) %}
+                <li class="disabled">
+                    <span>&hellip;</span>
+                </li>
+            {% else %}
+                <li>
+                    <a id="avantdernier" class="page" data-info="{{ pageCount -1 }}">{{ pageCount -1 }}</a>
+                </li>
+            {% endif %}
+        {% endif %}
+        <li>
+            <a id="page{{ pageCount }}" class="page" data-info="{{ pageCount }}">{{ pageCount }}</a>
+        </li>
+    {% endif %}
+
+    {% if next is defined %}
+        <li>
+            <a id="next" class="page" data-info="{{ next }}">{{ 'Next'|trans }}&nbsp;&raquo;</a>
+        </li>
+    {% else %}
+        <li class="disabled">
+            <span>{{ 'Next'|trans }}&nbsp;&raquo;</span>
+        </li>
+    {% endif %}
+    </ul>
+</div>
+<script src="{{ asset('js/jquery-2.1.4/jquery-2.1.4.min.js') }}"></script>
+<script>
+	$(document).ready(function() {
+		for(var i=1;i<={{ pageCount }}; i++) {
+			$('#page'+i).on('click', function() {
+				ajaxPaginator($(this));
+			});
+		}
+		$('#next').on('click', function() {
+			ajaxPaginator($(this));
+		});
+		$('#previous').on('click', function() {
+			ajaxPaginator($(this));
+		});
+		for(var i=1;i<=2; i++) {
+			$('#'+i).on('click', function() {
+				ajaxPaginator($(this));
+			});
+		}
+		$('#avantdernier').on('click', function() {
+			ajaxPaginator($(this));
+		});
+	});
+</script>
+{% endif %}

@@ -25,6 +25,84 @@ class appProdUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirecta
         $allow = array();
         $pathinfo = rawurldecode($pathinfo);
 
+        if (0 === strpos($pathinfo, '/m')) {
+            // index_mur
+            if ($pathinfo === '/mur') {
+                return array (  '_controller' => 'Images\\ImagesBundle\\Controller\\ImagesController::murAction',  '_route' => 'index_mur',);
+            }
+
+            if (0 === strpos($pathinfo, '/membre/images')) {
+                // images
+                if (rtrim($pathinfo, '/') === '/membre/images') {
+                    if (substr($pathinfo, -1) !== '/') {
+                        return $this->redirect($pathinfo.'/', 'images');
+                    }
+
+                    return array (  '_controller' => 'Images\\ImagesBundle\\Controller\\ImageController::indexAction',  '_route' => 'images',);
+                }
+
+                // images_listes
+                if ($pathinfo === '/membre/images/imagesAjax') {
+                    return array (  '_controller' => 'Images\\ImagesBundle\\Controller\\ImageController::ajaxAction',  '_route' => 'images_listes',);
+                }
+
+                // images_show
+                if (preg_match('#^/membre/images/(?P<id>[^/]++)/show$#s', $pathinfo, $matches)) {
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'images_show')), array (  '_controller' => 'Images\\ImagesBundle\\Controller\\ImageController::showAction',));
+                }
+
+                // images_new
+                if ($pathinfo === '/membre/images/new') {
+                    return array (  '_controller' => 'Images\\ImagesBundle\\Controller\\ImageController::newAction',  '_route' => 'images_new',);
+                }
+
+                // images_create
+                if ($pathinfo === '/membre/images/create') {
+                    if ($this->context->getMethod() != 'POST') {
+                        $allow[] = 'POST';
+                        goto not_images_create;
+                    }
+
+                    return array (  '_controller' => 'Images\\ImagesBundle\\Controller\\ImageController::createAction',  '_route' => 'images_create',);
+                }
+                not_images_create:
+
+                // images_edit
+                if (preg_match('#^/membre/images/(?P<id>[^/]++)/edit$#s', $pathinfo, $matches)) {
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'images_edit')), array (  '_controller' => 'Images\\ImagesBundle\\Controller\\ImageController::editAction',));
+                }
+
+                // images_update
+                if (preg_match('#^/membre/images/(?P<id>[^/]++)/update$#s', $pathinfo, $matches)) {
+                    if (!in_array($this->context->getMethod(), array('POST', 'PUT'))) {
+                        $allow = array_merge($allow, array('POST', 'PUT'));
+                        goto not_images_update;
+                    }
+
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'images_update')), array (  '_controller' => 'Images\\ImagesBundle\\Controller\\ImageController::updateAction',));
+                }
+                not_images_update:
+
+                // images_delete
+                if (preg_match('#^/membre/images/(?P<id>[^/]++)/delete$#s', $pathinfo, $matches)) {
+                    if (!in_array($this->context->getMethod(), array('POST', 'DELETE'))) {
+                        $allow = array_merge($allow, array('POST', 'DELETE'));
+                        goto not_images_delete;
+                    }
+
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'images_delete')), array (  '_controller' => 'Images\\ImagesBundle\\Controller\\ImageController::deleteAction',));
+                }
+                not_images_delete:
+
+                // images_effacer
+                if (preg_match('#^/membre/images/(?P<id>[^/]++)/effacer$#s', $pathinfo, $matches)) {
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'images_effacer')), array (  '_controller' => 'Images\\ImagesBundle\\Controller\\ImageController::effacerAction',));
+                }
+
+            }
+
+        }
+
         // accueil_homepage
         if (rtrim($pathinfo, '/') === '') {
             if (substr($pathinfo, -1) !== '/') {
@@ -32,6 +110,34 @@ class appProdUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirecta
             }
 
             return array (  '_controller' => 'Accueil\\AccueilBundle\\Controller\\DefaultController::indexAction',  '_route' => 'accueil_homepage',);
+        }
+
+        if (0 === strpos($pathinfo, '/vue')) {
+            // accueil_vue
+            if ($pathinfo === '/vue') {
+                return array (  '_controller' => 'Accueil\\AccueilBundle\\Controller\\DefaultController::vueAction',  '_route' => 'accueil_vue',);
+            }
+
+            // vue_ajax
+            if ($pathinfo === '/vueAjax') {
+                return array (  '_controller' => 'Accueil\\AccueilBundle\\Controller\\DefaultController::vueAjaxAction',  '_route' => 'vue_ajax',);
+            }
+
+        }
+
+        // enregistre_message
+        if ($pathinfo === '/enregistre') {
+            return array (  '_controller' => 'Accueil\\AccueilBundle\\Controller\\DefaultController::enregistreAction',  '_route' => 'enregistre_message',);
+        }
+
+        // accueil_bombage
+        if ($pathinfo === '/bombage') {
+            return array (  '_controller' => 'Accueil\\AccueilBundle\\Controller\\BombageController::bombageAction',  '_route' => 'accueil_bombage',);
+        }
+
+        // icones_bombage
+        if ($pathinfo === '/icones') {
+            return array (  '_controller' => 'Accueil\\AccueilBundle\\Controller\\BombageController::ajaxAction',  '_route' => 'icones_bombage',);
         }
 
         // membre_homepage
@@ -224,6 +330,51 @@ class appProdUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirecta
             return array (  '_controller' => 'FOS\\UserBundle\\Controller\\ChangePasswordController::changePasswordAction',  '_route' => 'fos_user_change_password',);
         }
         not_fos_user_change_password:
+
+        // membre_connexion
+        if ($pathinfo === '/connexion') {
+            return array (  '_controller' => 'Utilisateurs\\UtilisateursBundle\\Controller\\ConnexionController::appelConnexionAction',  '_route' => 'membre_connexion',);
+        }
+
+        // membre_inscription
+        if ($pathinfo === '/inscription') {
+            return array (  '_controller' => 'Utilisateurs\\UtilisateursBundle\\Controller\\InscriptionController::appelInscriptionAction',  '_route' => 'membre_inscription',);
+        }
+
+        // membre_confirmation
+        if ($pathinfo === '/confirmation') {
+            return array (  '_controller' => 'Utilisateurs\\UtilisateursBundle\\Controller\\RedirectionController::retourAction',  '_route' => 'membre_confirmation',);
+        }
+
+        // membre_finConfirmation
+        if ($pathinfo === '/finConfirmation') {
+            return array (  '_controller' => 'Utilisateurs\\UtilisateursBundle\\Controller\\RedirectionController::finAction',  '_route' => 'membre_finConfirmation',);
+        }
+
+        if (0 === strpos($pathinfo, '/media/cache/resolve')) {
+            // liip_imagine_filter_runtime
+            if (preg_match('#^/media/cache/resolve/(?P<filter>[A-z0-9_\\-]*)/rc/(?P<hash>[^/]++)/(?P<path>.+)$#s', $pathinfo, $matches)) {
+                if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                    $allow = array_merge($allow, array('GET', 'HEAD'));
+                    goto not_liip_imagine_filter_runtime;
+                }
+
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'liip_imagine_filter_runtime')), array (  '_controller' => 'liip_imagine.controller:filterRuntimeAction',));
+            }
+            not_liip_imagine_filter_runtime:
+
+            // liip_imagine_filter
+            if (preg_match('#^/media/cache/resolve/(?P<filter>[A-z0-9_\\-]*)/(?P<path>.+)$#s', $pathinfo, $matches)) {
+                if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                    $allow = array_merge($allow, array('GET', 'HEAD'));
+                    goto not_liip_imagine_filter;
+                }
+
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'liip_imagine_filter')), array (  '_controller' => 'liip_imagine.controller:filterAction',));
+            }
+            not_liip_imagine_filter:
+
+        }
 
         throw 0 < count($allow) ? new MethodNotAllowedException(array_unique($allow)) : new ResourceNotFoundException();
     }

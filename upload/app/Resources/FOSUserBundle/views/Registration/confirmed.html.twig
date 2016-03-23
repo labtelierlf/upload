@@ -3,21 +3,11 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% block fos_user_content %}
-	<div class="container">
-		<div class="row">
-			<div class="span12">
-				<h2>Confirmation <i class="icon-thumbs-up"></i></h2>
-				<div class="span3">
-					{% include 'UtilisateursBundle:Modules:utilisateurConnecte.html.twig' %}
-				</div>
-				<div class="liens span4 bords">
-					<br/>
-					<p>{{ 'registration.confirmed'|trans({'%username%': user.username}) }}</p>
-					{% if targetUrl %}
-					<p><a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a></p>
-					{% endif %}
-				</div>
-			</div>
-		</div>
-	</div>
+
+	<form id="conforme" action="{{ path('membre_confirmation') }}" method="post">
+		<input type="hidden" id="confirmation" name="confirmation" value="{{ 'registration.confirmed'|trans({'%username%': user.username}) }}"/>
+		<input type="hidden" id="adresseRetour" name="adresseRetour" value="{{ adresse.position }}"/>
+	</form>
+	<script>document.getElementById('conforme').submit();</script>		
+
 {% endblock fos_user_content %}

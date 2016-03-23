@@ -1,0 +1,19 @@
+<form id="enregistrement" action="{{ path('enregistre_message') }}" method="post">
+	<input type="hidden" name="message" value="{{ message }}"/>
+</form>
+<div style="background:url('{{ asset('images/texture_mur-72.jpg') }}'); padding-bottom:20px;">
+	<br/><br/><br/>
+	<div style="text-align:left; padding:0px 0px 0px 20px;">
+		<div title="modifier" style="display:inline-block; cursor:pointer; font-size:30px;" onclick="fermer()"><i class="icon-remove"></i></div>
+		&nbsp;&nbsp;
+		<div title="enregistrer" style="display:inline-block; cursor:pointer; font-size:30px;" onclick="enregistrer()"><i class="icon-save"></i></div>
+	</div>
+	<div style="display:inline-block; margin-top:0px; padding-bottom:100px;">
+		{{ message|raw }}
+	</div>
+</div>
+<script>
+	function enregistrer() {
+		document.getElementById('enregistrement').submit();
+	}
+</script>
